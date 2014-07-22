@@ -67,3 +67,6 @@
 *.bz2 binary
 *.zip binary
 *.dmg binary
+# Extra
+*.bsp binary
+*.raw binary
