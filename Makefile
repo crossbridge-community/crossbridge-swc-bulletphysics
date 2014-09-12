@@ -28,7 +28,8 @@
 
 .PHONY: debug clean all 
 
-BULLETDIR:=bullet-2.80-rev2531
+#BULLETDIR:=bullet-2.80-rev2531
+BULLETDIR:=bullet3-master
 #EXTRA_CFLAGS:=-DUSE_PTHREADS
 #EXTRA_OPTS:=-pthread
 #EXTRA_LIBS:=-lBulletMultiThreaded
