@@ -26,6 +26,42 @@
 # =END MIT LICENSE
 #
 
+# Detect host 
+$?UNAME=$(shell uname -s)
+#$(info $(UNAME))
+ifneq (,$(findstring CYGWIN,$(UNAME)))
+	$?nativepath=$(shell cygpath -at mixed $(1))
+	$?unixpath=$(shell cygpath -at unix $(1))
+else
+	$?nativepath=$(abspath $(1))
+	$?unixpath=$(abspath $(1))
+endif
+
+# CrossBridge SDK Home
+ifneq "$(wildcard $(call unixpath,$(FLASCC_ROOT)/sdk))" ""
+ $?FLASCC:=$(call unixpath,$(FLASCC_ROOT)/sdk)
+else
+ $?FLASCC:=/path/to/crossbridge-sdk/
+endif
+$?ASC2=java -jar $(call nativepath,$(FLASCC)/usr/lib/asc2.jar) -merge -md -parallel
+ 
+# Auto Detect AIR/Flex SDKs
+ifneq "$(wildcard $(AIR_HOME)/lib/compiler.jar)" ""
+ $?FLEX=$(AIR_HOME)
+else
+ $?FLEX:=/path/to/adobe-air-sdk/
+endif
+
+# C/CPP Compiler
+$?BASE_CFLAGS=-Werror -Wno-write-strings -Wno-trigraphs
+$?EXTRACFLAGS=
+$?OPT_CFLAGS=-O4
+
+# ASC2 Compiler
+$?MXMLC_DEBUG=true
+$?SWF_VERSION=25
+$?SWF_SIZE=800x600
+
 .PHONY: debug clean all 
 
 #BULLETDIR:=bullet-2.80-rev2531
@@ -37,21 +73,13 @@ EXTRA_CFLAGS:=
 EXTRA_OPTS:=
 EXTRA_LIBS:=
 
-all: check
-	@echo "-------- Example: Bullet --------"
-	
+all: 
 	mkdir -p build
 	cd build && PATH="$(call unixpath,$(FLASCC)/usr/bin):$(PATH)" CC=gcc CXX=g++ CFLAGS="$(OPT_CFLAGS) $(BASE_CFLAGS) $(EXTRACFLAGS)" CXXFLAGS="$(OPT_CFLAGS) $(BASE_CFLAGS) $(EXTRACFLAGS)" cmake \
 		-DCMAKE_CXX_FLAGS="-fno-exceptions -fno-rtti -O4" \
 		-DUSE_DOUBLE_PRECISION:BOOL=ON -DBUILD_EXTRAS:BOOL=OFF -DBUILD_DEMOS:BOOL=OFF  \
 		../$(BULLETDIR)/
-
-	make recompile
-
-recompile:
-
 	cd build && PATH="$(call unixpath,$(FLASCC)/usr/bin):$(PATH)" make -j8
-
 	make swc
 
 swc:
@@ -98,8 +126,6 @@ away3dswf:
 		-library-path+=away3d-core-fp11_4_0_9_gold.swc \
 		-swf-version=18 \
 		BulletPhysicsTest.as -o BulletPhysicsTest.swf
-
-include Makefile.common
 
 clean:
 	rm -rf build
