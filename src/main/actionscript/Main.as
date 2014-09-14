@@ -35,9 +35,9 @@ package
 
   import org.bulletphysics.*;
 
-  public class bulletdemo extends Sprite
+  public class Main extends Sprite
   {
-    public function bulletdemo()
+    public function Main()
     {
       addEventListener(Event.ADDED_TO_STAGE, initCode);
     }

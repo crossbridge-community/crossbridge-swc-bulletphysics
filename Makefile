@@ -64,8 +64,8 @@ $?SWF_SIZE=800x600
 
 .PHONY: debug clean all 
 
-#BULLETDIR:=bullet-2.80-rev2531
-BULLETDIR:=bullet3-master
+BULLETDIR:=bullet-2.80-rev2531
+#BULLETDIR:=bullet3-master
 #EXTRA_CFLAGS:=-DUSE_PTHREADS
 #EXTRA_OPTS:=-pthread
 #EXTRA_LIBS:=-lBulletMultiThreaded
@@ -115,7 +115,7 @@ swc:
 
 basicswf:
 	# Link the Bullet SWC with a basic sample app
-	"$(FLEX)/bin/mxmlc" -library-path=build/Bullet.swc bulletdemo.as -debug=$(MXMLC_DEBUG) -o build/bulletdemo.swf
+	"$(FLEX)/bin/mxmlc" -library-path=build/Bullet.swc src/main/actionscript/Main.as -debug=$(MXMLC_DEBUG) -o build/Main.swf
 
 # Fails with undefined method createThreadedDispatcher and createThreadedSolver
 away3dswf:
